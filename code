@@ -1,0 +1,48 @@
+#include <fstream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<long long> nota;
+int n, x, y; 
+int g[690000];
+long long maxim;
+
+int main()
+{
+    ifstream fin("aranjare1.in");
+    ofstream fout("aranjare1.out");
+
+    ios_base::sync_with_stdio(false);
+    fin.tie(NULL);
+    fout.tie(NULL);
+
+    fin >> n >> x >> y;
+    nota.resize(n + 1);
+
+    nota[1] = x;
+    g[x] = -1;
+
+    nota[2] = y;
+    g[y] = -1;
+
+    for (int i = 3; i <= n; i++) {
+        nota[i] = (17 * nota[i - 2] + 35 * nota[i - 1]) % 666013 + 3;
+        g[nota[i]] = -1;
+        maxim = max(nota[i], maxim);
+    }
+
+    int grupe = 0;
+    for (int i = 3; i <= maxim; ++ i) {
+        if (g[i] == -1) {
+            ++ grupe;
+            for (int j = i; j <= maxim; j += i) {
+                g[j] = grupe;
+            }
+        }
+    }
+
+    fout << grupe;
+    return 0;
+}
